@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "djsfixedprogression:oxidized_copper"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "djsfixedprogression:oxidized_copper"
+      }
+    ]
+  }
+}

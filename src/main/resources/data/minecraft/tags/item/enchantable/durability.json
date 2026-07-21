@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:shield",
+    "minecraft:elytra",
+    "minecraft:shears",
+    "minecraft:flint_and_steel",
+    "minecraft:brush"
+  ]
+}

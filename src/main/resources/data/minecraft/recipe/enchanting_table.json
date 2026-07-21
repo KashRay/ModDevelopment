@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " a ",
+    "bcb",
+    "ded"
+  ],
+  "key": {
+    "a": "minecraft:book",
+    "b": "minecraft:diamond",
+    "c": "#minecraft:wool",
+    "d": "minecraft:crying_obsidian",
+    "e": "minecraft:lapis_lazuli"
+  },
+  "result": {
+    "id": "minecraft:enchanting_table",
+    "count": 1
+  }
+}

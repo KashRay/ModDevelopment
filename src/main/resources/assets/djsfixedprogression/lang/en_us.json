@@ -1,0 +1,12 @@
+{
+  "item.djsfixedprogression.end_trial_key": "End Trial Key",
+  "item.djsfixedprogression.ominous_end_trial_key": "Ominous End Trial Key",
+  "item.djsfixedprogression.guardian_trial_key": "Guardian Trial Key",
+  "item.djsfixedprogression.ominous_guardian_trial_key": "Ominous Guardian Trial Key",
+  "item.minecraft.potion.effect.glowing": "Potion of Glowing",
+  "item.minecraft.splash_potion.effect.glowing": "Splash Potion of Glowing",
+  "item.minecraft.lingering_potion.effect.glowing": "Lingering Potion of Glowing",
+  "item.minecraft.tipped_arrow.effect.glowing": "Arrow of Glowing",
+  "effect.djsfixedprogression.cleanse": "Cleansing",
+  "filled_map.ancient_city": "Ancient City Explorer Map"
+}

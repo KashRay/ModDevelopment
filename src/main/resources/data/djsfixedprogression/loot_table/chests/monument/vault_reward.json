@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:vault",
+  "pools": [
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:prismarine_shard", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 12 } }] },
+        { "type": "minecraft:item", "name": "minecraft:prismarine_crystals", "weight": 5, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 8 } }] },
+        { "type": "minecraft:item", "name": "minecraft:sea_lantern", "weight": 4, "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }] },
+        { "type": "minecraft:item", "name": "minecraft:sea_pickle", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 4 } }] },
+        { "type": "minecraft:item", "name": "minecraft:cod", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 8 } }] },
+        { "type": "minecraft:item", "name": "minecraft:salmon", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 8 } }] },
+        { "type": "minecraft:item", "name": "minecraft:sponge", "weight": 2, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 4 } }] }
+      ],
+      "rolls": { "min": 2, "max": 3 }
+    },
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 4, "quality": -2 },
+        { "type": "minecraft:item", "name": "minecraft:iron_chestplate", "weight": 2, "functions": [{ "function": "minecraft:enchant_with_levels", "levels": 20 }] },
+        { "type": "minecraft:item", "name": "minecraft:book", "weight": 3, "quality": 1, "functions": [{ "function": "minecraft:enchant_with_levels", "levels": 20, "options": ["minecraft:impaling", "minecraft:aqua_affinity", "minecraft:depth_strider", "minecraft:loyalty"] }] }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "djsfixedprogression:chests/monument/vault_reward"
+}

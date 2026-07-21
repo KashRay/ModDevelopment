@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#minecraft:has_structure/ocean_monument",
+  "step": "surface_structures",
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "piece",
+      "spawns": [
+        {
+          "type": "minecraft:guardian",
+          "weight": 1,
+          "minCount": 2,
+          "maxCount": 4
+        }
+      ]
+    },
+    "water_creature": {
+      "bounding_box": "piece",
+      "spawns": []
+    },
+    "underground_water_creature": {
+      "bounding_box": "piece",
+      "spawns": []
+    }
+  },
+  "terrain_adaptation": "none",
+  "start_pool": "minecraft:monument",
+  "size": 1,
+  "max_distance_from_center": 80,
+  "start_height": {
+    "absolute": 31
+  },
+  "use_expansion_hack": false
+}

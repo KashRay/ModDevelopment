@@ -1,0 +1,33 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:damage",
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "minecraft:item/copper_pickaxe"
+    },
+    "entries": [
+      {
+        "threshold": 0.25,
+        "model": {
+          "type": "minecraft:model",
+          "model": "djsfixedprogression:item/exposed_copper_pickaxe"
+        }
+      },
+      {
+        "threshold": 0.50,
+        "model": {
+          "type": "minecraft:model",
+          "model": "djsfixedprogression:item/weathered_copper_pickaxe"
+        }
+      },
+      {
+        "threshold": 0.75,
+        "model": {
+          "type": "minecraft:model",
+          "model": "djsfixedprogression:item/oxidized_copper_pickaxe"
+        }
+      }
+    ]
+  }
+}

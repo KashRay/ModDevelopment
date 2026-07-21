@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "djabouty47.djsfixedprogression.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AbstractMinecartRendererMixin",
+    "InBedScreenMixin",
+    "MinecartRenderStateMixin",
+    "MinecraftMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ItemStackTooltipMixin"
+  ]
+}

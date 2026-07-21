@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "aaa",
+    "aba",
+    "aca"
+  ],
+  "key": {
+    "a": "minecraft:lapis_lazuli",
+    "b": "minecraft:obsidian",
+    "c": "minecraft:ghast_tear"
+  },
+  "result": {
+    "id": "minecraft:crying_obsidian",
+    "count": 1
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:vault",
+  "pools": [
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:prismarine_shard", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 8, "max": 16 } }] },
+        { "type": "minecraft:item", "name": "minecraft:prismarine_crystals", "weight": 5, "functions": [{ "function": "minecraft:set_count", "count": { "min": 6, "max": 10 } }] },
+        { "type": "minecraft:item", "name": "minecraft:prismarine", "weight": 5, "functions": [{ "function": "minecraft:set_count", "count": { "min": 8, "max": 16 } }] },
+        { "type": "minecraft:item", "name": "minecraft:dark_prismarine", "weight": 5, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 10 } }] },
+        { "type": "minecraft:item", "name": "minecraft:gold_block", "weight": 4, "quality": 2, "functions": [{ "function": "minecraft:set_count", "count": { "min": 1, "max": 3 } }] },
+        { "type": "minecraft:item", "name": "minecraft:sponge", "weight": 4, "quality": 1, "functions": [{ "function": "minecraft:set_count", "count": { "min": 8, "max": 16 } }] }
+      ],
+      "rolls": { "min": 2, "max": 4 }
+    },
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:turtle_scute", "weight": 2, "quality": 1},
+        { "type": "minecraft:item", "name": "minecraft:golden_helmet", "weight": 1, "quality": 2, "functions": [{ "function": "minecraft:enchant_with_levels", "levels": 40 }] },
+        { "type": "minecraft:item", "name": "minecraft:book", "weight": 2, "quality": 1, "functions": [{ "function": "minecraft:enchant_with_levels", "levels": 45, "options": ["minecraft:riptide", "minecraft:channeling", "minecraft:mending", "minecraft:thorns", "minecraft:impaling", "minecraft:respiration", "minecraft:aqua_affinity", "minecraft:depth_strider", "minecraft:frost_walker"] }] }
+      ],
+      "rolls": 1
+    },
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:empty", "weight": 60, "quality": -3 },
+        { "type": "minecraft:item", "name": "minecraft:trident", "weight": 5, "quality": 5 },
+        { "type": "minecraft:item", "name": "minecraft:tide_armor_trim_smithing_template", "weight": 5, "quality": 4 },
+        { "type": "minecraft:item", "name": "minecraft:music_disc_relic", "weight": 3, "quality": 3 }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "djsfixedprogression:chests/monument/vault_ominous_reward"
+}

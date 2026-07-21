@@ -1,0 +1,22 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:cooked_beef": 1,
+      "minecraft:golden_carrot": 1
+    },
+    "minecraft:custom": {
+      "minecraft:sleep_in_bed": 14,
+      "minecraft:time_since_rest": 23,
+      "minecraft:inspect_hopper": 2,
+      "minecraft:fall_one_cm": 1750,
+      "minecraft:walk_one_cm": 21918,
+      "minecraft:total_world_time": 54950,
+      "minecraft:leave_game": 5,
+      "minecraft:fly_one_cm": 52,
+      "minecraft:play_time": 54950,
+      "minecraft:jump": 72,
+      "minecraft:time_since_death": 54950
+    }
+  },
+  "DataVersion": 4671
+}

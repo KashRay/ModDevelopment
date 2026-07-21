@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:advancement_reward",
+  "pools": [
+    {
+      "bonus_rolls": 1,
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:ender_pearl", "weight": 3, "functions": [{ "function": "minecraft:set_count", "count": { "min": 8, "max": 13 } }] },
+        { "type": "minecraft:item", "name": "minecraft:spectral_arrow", "weight": 3, "functions": [{ "function": "minecraft:set_count", "count": { "min": 16, "max": 32 } }] },
+        { "type": "minecraft:item", "name": "minecraft:golden_carrot", "weight": 2, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 8 } }] },
+        { "type": "minecraft:item", "name": "minecraft:golden_apple", "weight": 2, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 3 } }] },
+        { "type": "minecraft:item", "name": "minecraft:potion", "weight": 2, "functions": [{ "function": "minecraft:set_components", "components": { "minecraft:potion_contents": { "potion": "minecraft:slow_falling" } } }] },
+        { "type": "minecraft:item", "name": "minecraft:potion", "weight": 2, "functions": [{ "function": "minecraft:set_components", "components": { "minecraft:potion_contents": { "potion": "minecraft:strong_healing" } } }] },
+        { "type": "minecraft:item", "name": "djsfixedprogression:ominous_end_trial_key", "weight": 2, "quality": 2 }
+      ],
+      "rolls": { "min": 1, "max": 2 }
+    }
+  ],
+  "random_sequence": "djsfixedprogression:chests/end_city/spawner_ominous_consumables"
+}

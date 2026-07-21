@@ -1,0 +1,33 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:hopper": 3,
+      "minecraft:comparator": 3,
+      "minecraft:redstone_lamp": 1,
+      "minecraft:sticky_piston": 4,
+      "minecraft:redstone_block": 1,
+      "minecraft:redstone": 2,
+      "minecraft:white_bed": 1,
+      "minecraft:torch": 1,
+      "minecraft:white_wool": 5
+    },
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 275,
+      "minecraft:walk_one_cm": 16055,
+      "minecraft:leave_game": 1,
+      "minecraft:damage_taken": 20,
+      "minecraft:play_time": 16853,
+      "minecraft:jump": 33,
+      "minecraft:time_since_death": 16853,
+      "minecraft:sprint_one_cm": 673,
+      "minecraft:sleep_in_bed": 3,
+      "minecraft:inspect_hopper": 3,
+      "minecraft:fall_one_cm": 975,
+      "minecraft:total_world_time": 16853,
+      "minecraft:fly_one_cm": 2422,
+      "minecraft:crouch_one_cm": 471,
+      "minecraft:sneak_time": 152
+    }
+  },
+  "DataVersion": 4671
+}

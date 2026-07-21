@@ -1,0 +1,21 @@
+/time set night
+/time set midnight
+/xp set @p 20 levels
+/time set midnight
+/xp set @p 0
+/xp set @p 0 levels
+/xp set @p 20 levels
+/op Player602
+/xp set @p 20 levels
+/time set midnight
+/xp set @p 20 levels
+/op Player117
+/xp set @a 20 levels
+/gamerule players_sleeping_percentage 100
+/xp set @a 20 levels
+/gamerule players_sleeping_percentage 100
+/op Player424
+/time set midnight
+/xp set @a 20 levels
+/time set midnight
+/gamerule players_sleeping_percentage 50

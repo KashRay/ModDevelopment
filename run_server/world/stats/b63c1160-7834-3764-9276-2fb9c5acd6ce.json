@@ -1,0 +1,35 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:time_since_rest": 2895,
+      "minecraft:walk_one_cm": 11102,
+      "minecraft:leave_game": 1,
+      "minecraft:mob_kills": 1,
+      "minecraft:damage_taken": 50,
+      "minecraft:play_time": 22801,
+      "minecraft:damage_dealt": 194,
+      "minecraft:jump": 65,
+      "minecraft:time_since_death": 22801,
+      "minecraft:sprint_one_cm": 6147,
+      "minecraft:sleep_in_bed": 5,
+      "minecraft:fall_one_cm": 225,
+      "minecraft:total_world_time": 22801,
+      "minecraft:fly_one_cm": 12483,
+      "minecraft:crouch_one_cm": 14,
+      "minecraft:sneak_time": 12
+    },
+    "minecraft:mined": {
+      "minecraft:white_bed": 1
+    },
+    "minecraft:killed": {
+      "minecraft:zombie": 1
+    },
+    "minecraft:used": {
+      "minecraft:white_bed": 1
+    },
+    "minecraft:picked_up": {
+      "minecraft:white_bed": 1
+    }
+  },
+  "DataVersion": 4671
+}

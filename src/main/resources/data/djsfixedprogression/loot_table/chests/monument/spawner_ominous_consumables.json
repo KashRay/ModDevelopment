@@ -1,0 +1,29 @@
+{
+  "type": "minecraft:advancement_reward",
+  "pools": [
+    {
+      "bonus_rolls": { "min": 1, "max": 2},
+      "entries": [
+        { "type": "minecraft:item", "name": "minecraft:prismarine_shard", "weight": 4, "functions": [{ "function": "minecraft:set_count", "count": { "min": 4, "max": 8 } }] },
+        { "type": "minecraft:item", "name": "minecraft:prismarine_crystals", "weight": 4, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 4 } }] },
+        { "type": "minecraft:item", "name": "minecraft:cooked_cod", "weight": 6, "functions": [{ "function": "minecraft:set_count", "count": { "min": 6, "max": 12 } }] },
+        { "type": "minecraft:item", "name": "minecraft:cooked_salmon", "weight": 5, "functions": [{ "function": "minecraft:set_count", "count": { "min": 6, "max": 12 } }] },
+        { "type": "minecraft:item", "name": "minecraft:pufferfish", "weight": 3, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 3 } }] },
+        { "type": "minecraft:item", "name": "minecraft:dried_kelp", "weight": 4, "functions": [{ "function": "minecraft:set_count", "count": { "min": 6, "max": 14 } }] },
+        { "type": "minecraft:item", "name": "minecraft:golden_carrot", "weight": 4, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 4 } }] },
+        { "type": "minecraft:item", "name": "minecraft:gold_ingot", "weight": 3, "functions": [{ "function": "minecraft:set_count", "count": { "min": 2, "max": 6 } }] },
+        { "type": "minecraft:item", "name": "minecraft:potion", "weight": 3, "functions": [{ "function": "minecraft:set_components", "components": { "minecraft:potion_contents": { "potion": "minecraft:water_breathing" } } }] }
+      ],
+      "rolls": 2
+    },
+    {
+      "entries": [
+        { "type": "minecraft:empty", "weight": 20, "quality": -2 },
+        { "type": "minecraft:item", "name": "minecraft:ominous_bottle", "weight": 2, "quality": 2, "functions": [{ "function": "minecraft:set_ominous_bottle_amplifier", "amplifier": { "type": "minecraft:uniform", "min": 2, "max": 4 } }] },
+        { "type": "minecraft:item", "name": "djsfixedprogression:ominous_guardian_trial_key", "weight": 1, "quality": 2 }
+      ],
+      "rolls": 1
+    }
+  ],
+  "random_sequence": "djsfixedprogression:chests/monument/spawner_ominous_consumables"
+}

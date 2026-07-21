@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:copper",
+    "minecraft:coal_block",
+    "minecraft:lapis_block",
+    "minecraft:redstone_block",
+    "minecraft:quartz_block"
+  ]
+}

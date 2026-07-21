@@ -1,0 +1,5 @@
+/effect give @e minecraft:saturation infinite 1 false
+/gamerule players_sleeping_percentage 50
+/time set midnight
+/effect give @e minecraft:saturation infinite 1 false
+/effect give @e minecraft:saturation infinite 1 true
