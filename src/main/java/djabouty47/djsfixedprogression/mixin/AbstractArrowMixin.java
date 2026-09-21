@@ -31,20 +31,16 @@ public abstract class AbstractArrowMixin {
     @Shadow protected abstract void setPickupItemStack(ItemStack itemStack);
 
     /**
-     * Inject code at the end of each tick, preventing arrows of splashing from burning up when flying through fire or lava.
+     * Inject code at the end of each tick, preventing tipped arrows from burning up when flying through fire or lava.
      */
     @Inject(method = "tick", at = @At("TAIL"))
     private void extinguishSplashingArrow(CallbackInfo ci) {
         //Check if arrow is on fire
         AbstractArrow arrow = (AbstractArrow) (Object) this;
         if (arrow.isOnFire()) {
-            //Get tipped arrow contents
+            //If arrow is tipped, extinguish it
             ItemStack arrowItem = this.getPickupItem();
-            if (arrowItem.has(DataComponents.POTION_CONTENTS)) {
-                //If arrow of splashing, clear fire
-                PotionContents contents = arrowItem.get(DataComponents.POTION_CONTENTS);
-                if (contents != null && contents.is(Potions.WATER)) arrow.clearFire();
-            }
+            if (arrowItem.has(DataComponents.POTION_CONTENTS)) arrow.clearFire();
         }
     }
 
@@ -105,7 +101,7 @@ public abstract class AbstractArrowMixin {
                 if (shooter instanceof LivingEntity) cloud.setOwner((LivingEntity)shooter);
 
                 //Adjust cloud stats
-                cloud.setRadius(1.0F); //2-block diameter cloud range
+                cloud.setRadius(1.5F); //3-block diameter cloud range
                 cloud.setDuration(100); //lasts 5 seconds
                 cloud.setRadiusPerTick(-0.005F); // Slowly shrink over time
                 cloud.setWaitTime(0); //Instantly apply effect on impact
@@ -123,12 +119,17 @@ public abstract class AbstractArrowMixin {
                     ));
                 }
 
-                //Preserve original potion type
-                PotionContents scaledContents = new PotionContents(potionContents.potion(), Optional.of(potionColor), scaledEffects, potionContents.customName());
+                //Create new potion contents using custom scaled effects
+                PotionContents scaledContents = new PotionContents(Optional.empty(), Optional.of(potionColor), scaledEffects, potionContents.customName());
+
+                //Pass potion data to cloud
                 cloud.setPotionContents(scaledContents);
 
                 //Tag area of effect cloud for lingering splashing effect
                 if (potionContents.is(Potions.WATER)) cloud.addTag("djs_water_cloud");
+
+                //Spawn in world safely
+                arrow.level().addFreshEntity(cloud);
 
                 //Glass vial shatters, revert projectile back into a standard arrow
                 this.setPickupItemStack(new ItemStack(Items.ARROW));
