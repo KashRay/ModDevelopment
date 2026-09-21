@@ -1,6 +1,7 @@
 package djabouty47.djsfixedprogression.mixin;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
@@ -9,6 +10,7 @@ import net.minecraft.world.entity.projectile.arrow.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -29,6 +31,24 @@ public abstract class AbstractArrowMixin {
     @Shadow protected abstract void setPickupItemStack(ItemStack itemStack);
 
     /**
+     * Inject code at the end of each tick, preventing arrows of splashing from burning up when flying through fire or lava.
+     */
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void extinguishSplashingArrow(CallbackInfo ci) {
+        //Check if arrow is on fire
+        AbstractArrow arrow = (AbstractArrow) (Object) this;
+        if (arrow.isOnFire()) {
+            //Get tipped arrow contents
+            ItemStack arrowItem = this.getPickupItem();
+            if (arrowItem.has(DataComponents.POTION_CONTENTS)) {
+                //If arrow of splashing, clear fire
+                PotionContents contents = arrowItem.get(DataComponents.POTION_CONTENTS);
+                if (contents != null && contents.is(Potions.WATER)) arrow.clearFire();
+            }
+        }
+    }
+
+    /**
      * Inject code after arrow hits a block, leaving a lingering potion cloud upon impact.
      */
     @Inject(method = "onHitBlock", at = @At("TAIL"))
@@ -42,6 +62,19 @@ public abstract class AbstractArrowMixin {
      */
     @Inject(method = "onHitEntity", at = @At("TAIL"))
     private void deployCloudOnEntityHit(EntityHitResult entityHitResult, CallbackInfo ci) {
+        AbstractArrow arrow = (AbstractArrow) (Object) this;
+        if (!arrow.level().isClientSide()) {
+            Entity target = entityHitResult.getEntity();
+            ItemStack arrowItem = this.getPickupItem();
+            if (arrowItem.has(DataComponents.POTION_CONTENTS)) {
+                PotionContents contents = arrowItem.get(DataComponents.POTION_CONTENTS);
+                if (contents != null && contents.is(Potions.WATER)) {
+                    //Deal extra water damage to sensitive mobs on direct hit
+                    if (target instanceof LivingEntity living && living.isSensitiveToWater()) living.hurtServer((ServerLevel) arrow.level(), arrow.damageSources().indirectMagic(arrow, arrow.getOwner()), 4.0F);
+                }
+            }
+        }
+
         //Call helper method to leave lingering cloud effect at location
         this.djs$trySpawnLingeringCloud(entityHitResult.getEntity().position());
     }
@@ -90,14 +123,12 @@ public abstract class AbstractArrowMixin {
                     ));
                 }
 
-                //Create brand-new potion contents using custom scaled effects
-                PotionContents scaledContents = new PotionContents(Optional.empty(), Optional.of(potionColor), scaledEffects, potionContents.customName());
-
-                //Pass potion data over to cloud
+                //Preserve original potion type
+                PotionContents scaledContents = new PotionContents(potionContents.potion(), Optional.of(potionColor), scaledEffects, potionContents.customName());
                 cloud.setPotionContents(scaledContents);
 
-                //Spawn in world safely
-                arrow.level().addFreshEntity(cloud);
+                //Tag area of effect cloud for lingering splashing effect
+                if (potionContents.is(Potions.WATER)) cloud.addTag("djs_water_cloud");
 
                 //Glass vial shatters, revert projectile back into a standard arrow
                 this.setPickupItemStack(new ItemStack(Items.ARROW));

@@ -2,68 +2,64 @@ package djabouty47.djsfixedprogression.mixin;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Blaze;
-import net.minecraft.world.entity.monster.EnderMan;
-import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CampfireBlock;
+import net.minecraft.world.level.block.BaseFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(AreaEffectCloud.class)
 public abstract class AreaEffectCloudMixin extends Entity {
-    @Shadow private PotionContents potionContents;
-
-    public AreaEffectCloudMixin(EntityType<? extends @NotNull AreaEffectCloud> entityType, Level level) {
-        super(entityType, level);
+    public AreaEffectCloudMixin(EntityType<?> type, Level level) {
+        super(type, level);
     }
 
+    @Shadow public abstract float getRadius();
+    @Shadow public abstract Entity getOwner();
+
     /**
-     * Inject code at the end of each tick, extinguishing entities and blocks inside lingering water cloud.
+     * Inject method at the end of each tick, extinguishing fires and damaging water-sensitive mobs within lingering water range.
      */
     @Inject(method = "tick", at = @At("TAIL"))
-    private void extinguishIfWater(CallbackInfo ci) {
-        if (!this.level().isClientSide() && this.potionContents != null) {
-            //Access potion data component directly from entity
-            if (this.potionContents.is(Potions.WATER)) {
-                AABB aabb = this.getBoundingBox();
+    private void onTickWaterCloud(CallbackInfo ci) {
+        if (!this.level().isClientSide() && this.getTags().contains("djs_water_cloud")) {
+            //Process every 5 ticks to save server performance
+            if (this.tickCount % 5 == 0) {
+                float radius = this.getRadius();
+                AABB bounds = this.getBoundingBox();
 
-                //Check all entities inside water cloud
-                for (Entity entity : this.level().getEntities(this, aabb)) {
-                    //Extinguish entities on fire
-                    entity.clearFire();
-
-                    //Damage water-sensitive mobs
-                    if (entity instanceof EnderMan || entity instanceof Blaze) entity.hurtServer((ServerLevel) this.level(), this.damageSources().drown(), 1.0F);
+                //Damage water-sensitive mobs continuously
+                List<LivingEntity> entities = this.level().getEntitiesOfClass(LivingEntity.class, bounds);
+                for (LivingEntity entity : entities) {
+                    if (entity.isSensitiveToWater()) entity.hurtServer((ServerLevel) this.level(), this.damageSources().indirectMagic(this, this.getOwner()), 2.0F); // 1 heart
                 }
 
-                //Check all blocks inside cloud radius
-                BlockPos min = new BlockPos(Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ));
-                BlockPos max = new BlockPos(Mth.ceil(aabb.maxX), Mth.ceil(aabb.maxY), Mth.ceil(aabb.maxZ));
+                //Extinguish fires in radius continuously
+                BlockPos center = this.blockPosition();
+                int r = (int) Math.ceil(radius);
 
-                BlockPos.betweenClosedStream(min, max).forEach((pos) -> {
-                    BlockState state = this.level().getBlockState(pos);
+                for (BlockPos pos : BlockPos.betweenClosed(center.offset(-r, -r, -r), center.offset(r, r, r))) {
+                    if (pos.distToCenterSqr(this.position()) <= radius * radius) {
+                        BlockState state = this.level().getBlockState(pos);
 
-                    //Extinguish standard fires
-                    if (state.is(Blocks.FIRE) || state.is(Blocks.SOUL_FIRE)) this.level().removeBlock(pos, false);
-                    //Extinguish lit campfires
-                    else if (CampfireBlock.isLitCampfire(state)) {
-                        CampfireBlock.dowse(null, this.level(), pos, state);
-                        this.level().setBlock(pos, state.setValue(CampfireBlock.LIT, false), 3);
+                        //Extinguish fires
+                        if (state.getBlock() instanceof BaseFireBlock) this.level().removeBlock(pos, false);
+                        //Extinguish campfires
+                        else if (state.is(BlockTags.CAMPFIRES) && state.hasProperty(BlockStateProperties.LIT) && state.getValue(BlockStateProperties.LIT)) this.level().setBlock(pos, state.setValue(BlockStateProperties.LIT, false), 3);
                     }
-                });
+                }
             }
         }
     }

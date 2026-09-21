@@ -57,6 +57,8 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.gossip.GossipType;
 import net.minecraft.world.entity.animal.golem.IronGolem;
 import net.minecraft.world.entity.animal.happyghast.HappyGhast;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.entity.npc.villager.VillagerTrades;
@@ -83,6 +85,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gamerules.GameRules;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.saveddata.maps.MapDecorationTypes;
 import net.minecraft.world.level.storage.LevelData;
@@ -293,7 +296,7 @@ public class DJsFixedProgression implements ModInitializer {
             return 1;
         })));
 
-        //Clear sleep votes every morning to prevent old votes from carrying over to the next night
+        //Clear sleep votes every morning to prevent old votes from carrying over to the next night, and add thunderstorm invasion logic
         ServerTickEvents.END_WORLD_TICK.register(level -> {
             if (level.dimension() == Level.OVERWORLD) {
                 long timeOfDay = level.getDayTime() % 24000;
@@ -302,6 +305,86 @@ public class DJsFixedProgression implements ModInitializer {
                 if (timeOfDay >= 0 && timeOfDay < 12000 && !SLEEP_VOTES.isEmpty()) {
                     SLEEP_VOTES.clear();
                     for (ServerPlayer p : level.players()) ServerPlayNetworking.send(p, new SleepVoteCancelPayload());
+                }
+
+                //Check if it is storming and mode isn't peaceful
+                if (level.isThundering() && level.getDifficulty() != Difficulty.PEACEFUL) {
+                    //Check every 100 ticks for a surface spawn
+                    if (level.getGameRules().get(GameRules.SPAWN_MOBS) && level.getGameTime() % 100 == 0) {
+                        for (ServerPlayer p : level.players()) {
+                            //Check if player is loading spawn level
+                            if (!p.isCreative() && !p.isSpectator() && level.canSeeSky(p.blockPosition())) {
+                                //25% chance of spawning an extra mob
+                                if (level.random.nextInt(4) == 0) {
+                                    //Spawn mob 24-40 blocks away
+                                    double angle = level.random.nextDouble() * Math.PI * 2;
+                                    double distance = 24.0 + level.random.nextDouble() * 16.0;
+                                    double spawnX = p.getX() + Math.cos(angle) * distance;
+                                    double spawnZ = p.getZ() + Math.sin(angle) * distance;
+
+                                    //Only spawn if the target block can see the sky
+                                    BlockPos spawnPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(spawnX, 0, spawnZ));
+                                    if (level.canSeeSky(spawnPos)) {
+                                        EntityType<?>[] monsters = {EntityType.ZOMBIE, EntityType.SKELETON, EntityType.CREEPER, EntityType.SPIDER};
+                                        EntityType<?> typeToSpawn = monsters[level.random.nextInt(monsters.length)];
+
+                                        Monster monster = (Monster) typeToSpawn.create(level, EntitySpawnReason.EVENT);
+                                        if (monster != null) {
+                                            monster.setPos(spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5);
+                                            level.addFreshEntity(monster);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    //Check every 4800 ticks for a possible horde spawn near a village
+                    if (level.getGameTime() % 4800 == 0) {
+                        if (level.random.nextBoolean()) {
+                            List<ServerPlayer> survivalPlayers = level.players().stream().filter(p -> !p.isCreative() && !p.isSpectator()).toList();
+                            if (!survivalPlayers.isEmpty()) {
+                                ServerPlayer randomPlayer = survivalPlayers.get(level.random.nextInt(survivalPlayers.size()));
+
+                                //Approximate village detection by scanning for villagers within 64 blocks
+                                List<Villager> villagers = level.getEntitiesOfClass(Villager.class, randomPlayer.getBoundingBox().inflate(64.0));
+                                if (!villagers.isEmpty()) {
+                                    //Target a specific villager
+                                    Villager targetVillager = villagers.get(level.random.nextInt(villagers.size()));
+
+                                    //Calculate spawn point 35-50 blocks away from target villager
+                                    double angle = level.random.nextDouble() * 2 * Math.PI;
+                                    double distance = 35.0 + level.random.nextDouble() * 15.0;
+                                    double spawnX = targetVillager.getX() + Math.cos(angle) * distance;
+                                    double spawnZ = targetVillager.getZ() + Math.sin(angle) * distance;
+
+                                    //Only spawn if the target block can see the sky
+                                    BlockPos spawnPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(spawnX, 0, spawnZ));
+
+                                    //Ensure spawn isn't on top of player
+                                    if (spawnPos.distToCenterSqr(randomPlayer.position()) > 400.0) {
+                                        //Spawn a horde of zombies
+                                        int hordeSize = 5 + level.random.nextInt(6);
+                                        for (int i = 0; i < hordeSize; i++) {
+                                            Zombie zombie = EntityType.ZOMBIE.create(level, EntitySpawnReason.EVENT);
+                                            if (zombie != null) {
+                                                //Scatter the zombies slighly
+                                                zombie.setPos(spawnPos.getX() + level.random.nextDouble() * 4 - 2, spawnPos.getY(), spawnPos.getZ() + level.random.nextDouble() * 4 - 2);
+
+                                                //Force zombie horde to aggro towards the village
+                                                zombie.setTarget(villagers.get(level.random.nextInt(villagers.size())));
+
+                                                //Spawn zombie
+                                                level.addFreshEntity(zombie);
+                                            }
+                                        }
+                                        //Notify player of the approaching horde
+                                        randomPlayer.displayClientMessage(Component.literal("A horde of zombies is approaching...").withStyle(ChatFormatting.DARK_RED), true);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         });

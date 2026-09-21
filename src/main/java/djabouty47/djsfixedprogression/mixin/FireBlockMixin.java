@@ -21,7 +21,19 @@ public class FireBlockMixin {
     private void preventFireSpread(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         //Check if beacon changes are enabled in configs, and if tracker finds the beacon upgrade
         if (DJsConfig.getInstance().enableBeaconChanges && BeaconTracker.hasUpgrade(level, pos, "fire_spread")) {
-            //Cancel the tick so fire will no longer spread to adjacent blocks and will not consume the block it is sitting on
+            //Reschedule tick to prevent fire from freezing in time
+            level.scheduleTick(pos, state.getBlock(), 30 + random.nextInt(10));
+
+            //Allow fire to age and burn out naturally, but never spread or destroy blocks
+            int age = state.getValue(FireBlock.AGE);
+            int nextAge = Math.min(15, age + random.nextInt(3) / 2);
+
+            //Slowly increase the fire's age
+            if (age != nextAge) level.setBlock(pos, state.setValue(FireBlock.AGE, nextAge), 4);
+            //Once it reaches max age, let it naturally burn out and vanish
+            if (nextAge == 15 && random.nextInt(4) == 0) level.removeBlock(pos, false);
+
+            //Cancel the rest of the vanilla tick to prevent fire spreading or damage
             ci.cancel();
         }
     }
